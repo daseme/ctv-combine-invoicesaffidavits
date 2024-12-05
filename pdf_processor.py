@@ -6,9 +6,18 @@ from tqdm import tqdm
 from typing import Dict, List, Tuple
 from utils.validator import FileValidator
 
+import os
+from PyPDF2 import PdfReader, PdfWriter
+import re
+import logging
+from tqdm import tqdm
+from typing import Dict, List, Tuple
+from utils.validator import FileValidator
+
 class PDFProcessor:
-    def __init__(self, input_dir: str = None):
+    def __init__(self, input_dir: str = None, ignore_mismatches: bool = False):
         self.input_dir = input_dir or 'input'
+        self.ignore_mismatches = ignore_mismatches
         self.found_files = self._find_input_files()
         self.stats = {
             'invoice_count': 0,
@@ -110,13 +119,22 @@ class PDFProcessor:
         missing_invoices = affidavit_doc_numbers - invoice_doc_numbers
         missing_affidavits = invoice_doc_numbers - affidavit_doc_numbers
 
+        mismatch_details = []
         if missing_invoices or missing_affidavits:
-            logging.error("Mismatch between invoice and affidavit documents:")
             if missing_invoices:
-                logging.error(f"Missing invoices: {', '.join(missing_invoices)}")
+                mismatch_details.append(f"Missing invoices: {', '.join(sorted(missing_invoices))}")
             if missing_affidavits:
-                logging.error(f"Missing affidavits: {', '.join(missing_affidavits)}")
-            raise ValueError("Document count mismatch between invoices and affidavits")
+                mismatch_details.append(f"Missing affidavits: {', '.join(sorted(missing_affidavits))}")
+            
+            if not self.ignore_mismatches:
+                raise ValueError("Document count mismatch:\n" + "\n".join(mismatch_details))
+            
+            # If ignoring mismatches, only process documents that have both invoice and affidavit
+            common_docs = invoice_doc_numbers & affidavit_doc_numbers
+            invoice_docs = {k: v for k, v in invoice_docs.items() if k in common_docs}
+            affidavit_docs = {k: v for k, v in affidavit_docs.items() if k in common_docs}
+            
+            logging.warning("\n".join(mismatch_details))
 
         logging.info("Merging documents...")
         for doc_num in tqdm(invoice_docs, desc="Creating merged PDFs", unit="doc"):
@@ -138,4 +156,4 @@ class PDFProcessor:
             self.stats['processed_count'] += 1
 
         logging.info(f"Processing complete! Output files are in the '{output_dir}' directory.")
-        return self.stats
+        return self.stats, mismatch_details if (missing_invoices or missing_affidavits) else None

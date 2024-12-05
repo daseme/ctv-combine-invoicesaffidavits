@@ -1,8 +1,11 @@
+import os
 import logging
 from datetime import datetime
 
 def setup_logging():
-    log_file = f'invoice_merger_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log'
+    log_dir = 'logs'
+    os.makedirs(log_dir, exist_ok=True)
+    log_file = os.path.join(log_dir, f'invoice_merger_{datetime.now().strftime("%Y%m%d_%H%M%S")}.log')
     
     logging.basicConfig(
         level=logging.INFO,

@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 pypdf2 = "*"
 tqdm = "*"
+ttkthemes = "*"
 
 [dev-packages]
 

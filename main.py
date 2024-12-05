@@ -1,11 +1,12 @@
-from gui import InvoiceMergerGUI
+from gui import ModernInvoiceMergerGUI
+from ttkthemes import ThemedTk
 import tkinter as tk
 from utils.logger import setup_logging
 
 def main():
     setup_logging()
-    root = tk.Tk()
-    app = InvoiceMergerGUI(root)
+    root = ThemedTk(theme="arc")
+    app = ModernInvoiceMergerGUI(root)
     root.mainloop()
 
 if __name__ == "__main__":
