@@ -61,6 +61,29 @@ class PDFProcessor:
             os.path.join(self.input_dir, affidavit_file)
         )
 
+    def extract_customer_info_from_invoice(self, text: str) -> str:
+        """
+        Extract customer information from invoice PDF text.
+        The customer name is the first line after "Bill To".
+        """
+        # Split the text into lines
+        lines = text.splitlines()
+        
+        # Find the line containing "Bill To"
+        bill_to_index = -1
+        for i, line in enumerate(lines):
+            if "Bill To" in line:
+                bill_to_index = i
+                break
+        
+        # If "Bill To" is found, get the next line (customer name)
+        if bill_to_index != -1 and bill_to_index + 1 < len(lines):
+            customer_name = lines[bill_to_index + 1].strip()
+            return customer_name
+        
+        # Fallback if "Bill To" or customer name is not found
+        return "UNKNOWN"
+
     def extract_customer_info(self, text: str) -> str:
         """Extract customer information from PDF text."""
         match = re.search(r'AFFIDAVIT OF PERFORMANCE - CROSSINGS TV\n(.*?)\n', text)
@@ -159,9 +182,9 @@ class PDFProcessor:
                 for page in affidavit_docs[doc_num]:
                     writer.add_page(page)
                 
-                # Extract customer info
-                affidavit_text = affidavit_docs[doc_num][0].extract_text()
-                customer_info = self.extract_customer_info(affidavit_text)
+                # Extract customer info from the INVOICE (not the affidavit)
+                invoice_text = invoice_docs[doc_num][0].extract_text()
+                customer_info = self.extract_customer_info_from_invoice(invoice_text)
 
                 sanitized_customer_info = FileValidator.sanitize_filename(customer_info)
                 output_filename = os.path.join(output_dir, f"{doc_num} {sanitized_customer_info}.pdf")

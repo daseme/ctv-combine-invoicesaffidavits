@@ -6,9 +6,9 @@
         "success_rate": 50.0
     },
     "2025-01-02": {
-        "processed_count": 9,
+        "processed_count": 12,
         "error_count": 6,
-        "total_time": 131.58603739738464,
-        "success_rate": 33.33333333333333
+        "total_time": 219.79019784927368,
+        "success_rate": 50.0
     }
 }
