@@ -1,4 +1,5 @@
 import os
+import re
 from PyPDF2 import PdfReader
 from typing import List
 
@@ -28,3 +29,14 @@ class FileValidator:
         except Exception as e:
             return f"Error reading {pdf_path}: {str(e)}"
         return None
+
+    @staticmethod
+    def sanitize_filename(filename: str) -> str:
+        """
+        Sanitize the filename by removing or replacing invalid characters.
+        """
+        # Replace invalid characters with an underscore or remove them
+        sanitized = re.sub(r'[<>:"/\\|?*]', '_', filename)
+        # Remove leading/trailing spaces and dots (Windows doesn't allow these at the end)
+        sanitized = sanitized.strip('. ')
+        return sanitized

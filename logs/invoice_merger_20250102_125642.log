@@ -1,0 +1,109 @@
+2025-01-02 12:56:42,680 - INFO - Application started
+2025-01-02 12:56:54,399 - INFO - Extracting document information from invoices...
+2025-01-02 12:56:55,905 - INFO - Found documents in 2412 Invoices.pdf: ['2412-001', '2412-002', '2412-003', '2412-004', '2412-005', '2412-006', '2412-007', '2412-008', '2412-009', '2412-010', '2412-011', '2412-012', '2412-013', '2412-014', '2412-015', '2412-016', '2412-017', '2412-018', '2412-019', '2412-020', '2412-021', '2412-022', '2412-023', '2412-024', '2412-025', '2412-026', '2412-027', '2412-028', '2412-029', '2412-030', '2412-031', '2412-032', '2412-033', '2412-034', '2412-035', '2412-036', '2412-037', '2412-038', '2412-039', '2412-040', '2412-041', '2412-042', '2412-043', '2412-044', '2412-045', '2412-046', '2412-047', '2412-048', '2412-049', '2412-050', '2412-051', '2412-052', '2412-053', '2412-054', '2412-055', '2412-056', '2412-057', '2412-058', '2412-059', '2412-060', '2412-061', '2412-062', '2412-063', '2412-064', '2412-065', '2412-066', '2412-067', '2412-068', '2412-069', '2412-070', '2412-071', '2412-072', '2412-073', '2412-074', '2412-075', '2412-076', '2412-077', '2412-078', '2412-079', '2412-080', '2412-081', '2412-082', '2412-083', '2412-084', '2412-085', '2412-086', '2412-087', '2412-088', '2412-089', '2412-090', '2412-091', '2412-092', '2412-093', '2412-094', '2412-095', '2412-096', '2412-097', '2412-500', '2412-501', '2412-505']
+2025-01-02 12:56:55,907 - INFO - Found 100 invoices.
+2025-01-02 12:56:55,907 - INFO - Extracting document information from affidavits...
+2025-01-02 12:57:07,842 - INFO - Found documents in 2412 Affidavits.pdf: ['2412-001', '2412-002', '2412-003', '2412-004', '2412-005', '2412-006', '2412-007', '2412-008', '2412-009', '2412-010', '2412-011', '2412-012', '2412-013', '2412-014', '2412-015', '2412-016', '2412-017', '2412-018', '2412-019', '2412-020', '2412-021', '2412-022', '2412-023', '2412-024', '2412-025', '2412-026', '2412-027', '2412-028', '2412-029', '2412-030', '2412-031', '2412-032', '2412-033', '2412-034', '2412-035', '2412-036', '2412-037', '2412-038', '2412-039', '2412-040', '2412-041', '2412-042', '2412-043', '2412-044', '2412-045', '2412-046', '2412-047', '2412-048', '2412-049', '2412-050', '2412-051', '2412-052', '2412-053', '2412-054', '2412-055', '2412-056', '2412-057', '2412-058', '2412-059', '2412-060', '2412-061', '2412-062', '2412-063', '2412-064', '2412-065', '2412-066', '2412-067', '2412-068', '2412-069', '2412-070', '2412-071', '2412-072', '2412-073', '2412-074', '2412-075', '2412-076', '2412-077', '2412-078', '2412-079', '2412-080', '2412-081', '2412-082', '2412-083', '2412-084', '2412-085', '2412-086', '2412-087', '2412-088', '2412-089', '2412-090', '2412-091', '2412-092', '2412-093', '2412-094', '2412-095', '2412-096', '2412-500', '2412-501', '2412-505']
+2025-01-02 12:57:07,842 - INFO - Found 99 affidavits.
+2025-01-02 12:57:07,843 - WARNING - Missing affidavits: 2412-097
+2025-01-02 12:57:07,843 - INFO - Merging documents...
+2025-01-02 12:57:08,039 - INFO - Processed document 2412-001.
+2025-01-02 12:57:08,104 - INFO - Processed document 2412-002.
+2025-01-02 12:57:08,170 - INFO - Processed document 2412-003.
+2025-01-02 12:57:08,247 - INFO - Processed document 2412-004.
+2025-01-02 12:57:08,305 - INFO - Processed document 2412-005.
+2025-01-02 12:57:08,360 - INFO - Processed document 2412-006.
+2025-01-02 12:57:08,419 - INFO - Processed document 2412-007.
+2025-01-02 12:57:08,527 - INFO - Processed document 2412-008.
+2025-01-02 12:57:08,596 - INFO - Processed document 2412-009.
+2025-01-02 12:57:08,634 - INFO - Processed document 2412-010.
+2025-01-02 12:57:08,689 - INFO - Processed document 2412-011.
+2025-01-02 12:57:08,729 - INFO - Processed document 2412-012.
+2025-01-02 12:57:08,770 - INFO - Processed document 2412-013.
+2025-01-02 12:57:08,809 - INFO - Processed document 2412-014.
+2025-01-02 12:57:08,849 - INFO - Processed document 2412-015.
+2025-01-02 12:57:08,904 - INFO - Processed document 2412-016.
+2025-01-02 12:57:08,944 - INFO - Processed document 2412-017.
+2025-01-02 12:57:08,999 - INFO - Processed document 2412-018.
+2025-01-02 12:57:09,107 - INFO - Processed document 2412-019.
+2025-01-02 12:57:09,248 - INFO - Processed document 2412-020.
+2025-01-02 12:57:09,335 - INFO - Processed document 2412-021.
+2025-01-02 12:57:09,389 - INFO - Processed document 2412-022.
+2025-01-02 12:57:09,446 - INFO - Processed document 2412-023.
+2025-01-02 12:57:09,512 - INFO - Processed document 2412-024.
+2025-01-02 12:57:09,591 - INFO - Processed document 2412-025.
+2025-01-02 12:57:09,643 - INFO - Processed document 2412-026.
+2025-01-02 12:57:09,698 - INFO - Processed document 2412-027.
+2025-01-02 12:57:09,760 - INFO - Processed document 2412-028.
+2025-01-02 12:57:09,948 - INFO - Processed document 2412-029.
+2025-01-02 12:57:10,163 - INFO - Processed document 2412-030.
+2025-01-02 12:57:10,238 - ERROR - Error processing document 2412-031: [Errno 22] Invalid argument: "2412_output\\2412-031 Hoffman|Lewis Northern California Toyota Dealer's Assocation.pdf"
+2025-01-02 12:57:10,274 - ERROR - Error processing document 2412-032: [Errno 22] Invalid argument: "2412_output\\2412-032 Hoffman|Lewis Northern California Toyota Dealer's Assocation.pdf"
+2025-01-02 12:57:10,428 - ERROR - Error processing document 2412-033: [Errno 22] Invalid argument: "2412_output\\2412-033 Hoffman|Lewis Northern California Toyota Dealer's Assocation.pdf"
+2025-01-02 12:57:10,512 - ERROR - Error processing document 2412-034: [Errno 22] Invalid argument: "2412_output\\2412-034 Hoffman|Lewis Northern California Toyota Dealer's Assocation.pdf"
+2025-01-02 12:57:10,551 - ERROR - Error processing document 2412-035: [Errno 22] Invalid argument: "2412_output\\2412-035 Hoffman|Lewis Northern California Toyota Dealer's Assocation.pdf"
+2025-01-02 12:57:10,615 - INFO - Processed document 2412-036.
+2025-01-02 12:57:10,655 - INFO - Processed document 2412-037.
+2025-01-02 12:57:10,714 - INFO - Processed document 2412-038.
+2025-01-02 12:57:10,771 - INFO - Processed document 2412-039.
+2025-01-02 12:57:10,827 - INFO - Processed document 2412-040.
+2025-01-02 12:57:10,866 - INFO - Processed document 2412-041.
+2025-01-02 12:57:10,985 - INFO - Processed document 2412-042.
+2025-01-02 12:57:11,053 - INFO - Processed document 2412-043.
+2025-01-02 12:57:11,116 - INFO - Processed document 2412-044.
+2025-01-02 12:57:11,298 - INFO - Processed document 2412-045.
+2025-01-02 12:57:11,431 - INFO - Processed document 2412-046.
+2025-01-02 12:57:11,565 - INFO - Processed document 2412-047.
+2025-01-02 12:57:11,875 - INFO - Processed document 2412-048.
+2025-01-02 12:57:12,060 - INFO - Processed document 2412-049.
+2025-01-02 12:57:12,174 - INFO - Processed document 2412-050.
+2025-01-02 12:57:12,295 - INFO - Processed document 2412-051.
+2025-01-02 12:57:12,356 - INFO - Processed document 2412-052.
+2025-01-02 12:57:12,395 - INFO - Processed document 2412-053.
+2025-01-02 12:57:12,520 - INFO - Processed document 2412-054.
+2025-01-02 12:57:12,876 - INFO - Processed document 2412-055.
+2025-01-02 12:57:13,091 - INFO - Processed document 2412-056.
+2025-01-02 12:57:13,335 - INFO - Processed document 2412-057.
+2025-01-02 12:57:13,603 - INFO - Processed document 2412-058.
+2025-01-02 12:57:13,737 - INFO - Processed document 2412-059.
+2025-01-02 12:57:13,865 - INFO - Processed document 2412-060.
+2025-01-02 12:57:13,990 - INFO - Processed document 2412-061.
+2025-01-02 12:57:14,070 - INFO - Processed document 2412-062.
+2025-01-02 12:57:14,309 - INFO - Processed document 2412-063.
+2025-01-02 12:57:14,454 - INFO - Processed document 2412-064.
+2025-01-02 12:57:14,838 - INFO - Processed document 2412-065.
+2025-01-02 12:57:14,931 - INFO - Processed document 2412-066.
+2025-01-02 12:57:15,011 - INFO - Processed document 2412-067.
+2025-01-02 12:57:15,276 - INFO - Processed document 2412-068.
+2025-01-02 12:57:15,767 - INFO - Processed document 2412-069.
+2025-01-02 12:57:15,869 - INFO - Processed document 2412-070.
+2025-01-02 12:57:15,952 - INFO - Processed document 2412-071.
+2025-01-02 12:57:16,070 - INFO - Processed document 2412-072.
+2025-01-02 12:57:16,339 - ERROR - Error processing document 2412-073: [Errno 2] No such file or directory: '2412_output\\2412-073 115187Direct Donor TV c/o Worldlink Ventures.pdf'
+2025-01-02 12:57:16,526 - ERROR - Error processing document 2412-074: [Errno 2] No such file or directory: '2412_output\\2412-074 Direct Donor TV c/o Worldlink Ventures Covenant House.pdf'
+2025-01-02 12:57:16,888 - ERROR - Error processing document 2412-075: [Errno 2] No such file or directory: '2412_output\\2412-075 Direct Donor TV c/o Worldlink Ventures Covenant House.pdf'
+2025-01-02 12:57:17,255 - ERROR - Error processing document 2412-076: [Errno 2] No such file or directory: '2412_output\\2412-076 Direct Donor TV c/o Worldlink Ventures.pdf'
+2025-01-02 12:57:17,807 - ERROR - Error processing document 2412-077: [Errno 2] No such file or directory: '2412_output\\2412-077 Direct Donor TV c/o Worldlink Ventures.pdf'
+2025-01-02 12:57:18,064 - ERROR - Error processing document 2412-078: [Errno 2] No such file or directory: '2412_output\\2412-078 Direct Donor TV c/o Worldlink Ventures Shriners Multicultural.pdf'
+2025-01-02 12:57:18,346 - ERROR - Error processing document 2412-079: [Errno 2] No such file or directory: '2412_output\\2412-079 115211Direct Donor TV c/o Worldlink Ventures.pdf'
+2025-01-02 12:57:19,136 - INFO - Processed document 2412-080.
+2025-01-02 12:57:19,921 - INFO - Processed document 2412-081.
+2025-01-02 12:57:20,723 - INFO - Processed document 2412-082.
+2025-01-02 12:57:21,527 - ERROR - Error processing document 2412-083: [Errno 2] No such file or directory: '2412_output\\2412-083 Key Contacts c/o Worldlink Ventures Legal Leads.pdf'
+2025-01-02 12:57:21,884 - INFO - Processed document 2412-084.
+2025-01-02 12:57:22,067 - INFO - Processed document 2412-085.
+2025-01-02 12:57:22,327 - INFO - Processed document 2412-086.
+2025-01-02 12:57:22,744 - INFO - Processed document 2412-087.
+2025-01-02 12:57:22,951 - INFO - Processed document 2412-088.
+2025-01-02 12:57:23,158 - INFO - Processed document 2412-089.
+2025-01-02 12:57:23,238 - ERROR - Error processing document 2412-090: [Errno 2] No such file or directory: '2412_output\\2412-090 Direct Donor TV c/o Worldlink Ventures American Heart Association.pdf'
+2025-01-02 12:57:23,328 - ERROR - Error processing document 2412-091: [Errno 2] No such file or directory: '2412_output\\2412-091 Direct Donor TV c/o Worldlink Ventures Covenant House.pdf'
+2025-01-02 12:57:23,432 - ERROR - Error processing document 2412-092: [Errno 2] No such file or directory: '2412_output\\2412-092 Direct Donor TV c/o Worldlink Ventures Feeding America.pdf'
+2025-01-02 12:57:23,538 - ERROR - Error processing document 2412-093: [Errno 2] No such file or directory: '2412_output\\2412-093 Direct Donor TV c/o Worldlink Ventures Shriners Hospital.pdf'
+2025-01-02 12:57:23,610 - ERROR - Error processing document 2412-094: [Errno 2] No such file or directory: '2412_output\\2412-094 Direct Donor TV c/o Worldlink Ventures Shriners Multicultural.pdf'
+2025-01-02 12:57:23,685 - ERROR - Error processing document 2412-095: [Errno 2] No such file or directory: '2412_output\\2412-095 Direct Donor TV c/o Worldlink Ventures Save the Children.pdf'
+2025-01-02 12:57:23,819 - INFO - Processed document 2412-096.
+2025-01-02 12:57:23,886 - INFO - Processed document 2412-500.
+2025-01-02 12:57:23,925 - INFO - Processed document 2412-501.
+2025-01-02 12:57:23,971 - INFO - Processed document 2412-505.
+2025-01-02 12:57:23,972 - INFO - Processing complete! Output files are in the '2412_output' directory.

@@ -106,9 +106,13 @@ class PDFProcessor:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
-        logging.info("Extracting document information...")
+        logging.info("Extracting document information from invoices...")
         invoice_docs = self.extract_info_from_pdf(invoice_file)
+        logging.info(f"Found {len(invoice_docs)} invoices.")
+
+        logging.info("Extracting document information from affidavits...")
         affidavit_docs = self.extract_info_from_pdf(affidavit_file)
+        logging.info(f"Found {len(affidavit_docs)} affidavits.")
 
         self.stats['invoice_count'] = len(invoice_docs)
         self.stats['affidavit_count'] = len(affidavit_docs)
@@ -138,22 +142,37 @@ class PDFProcessor:
 
         logging.info("Merging documents...")
         for doc_num in tqdm(invoice_docs, desc="Creating merged PDFs", unit="doc"):
-            writer = PdfWriter()
-            
-            # Add invoice and affidavit pages
-            for page in invoice_docs[doc_num]:
-                writer.add_page(page)
-            for page in affidavit_docs[doc_num]:
-                writer.add_page(page)
-            
-            # Extract customer info
-            affidavit_text = affidavit_docs[doc_num][0].extract_text()
-            customer_info = self.extract_customer_info(affidavit_text)
-            
-            output_filename = os.path.join(output_dir, f"{doc_num} {customer_info}.pdf")
-            with open(output_filename, 'wb') as output_file:
-                writer.write(output_file)
-            self.stats['processed_count'] += 1
+            try:
+                # Validate PDF structure
+                for page in invoice_docs[doc_num]:
+                    if not page.extract_text():
+                        logging.warning(f"Empty or invalid page in invoice {doc_num}")
+                for page in affidavit_docs[doc_num]:
+                    if not page.extract_text():
+                        logging.warning(f"Empty or invalid page in affidavit {doc_num}")
+                
+                writer = PdfWriter()
+                
+                # Add invoice and affidavit pages
+                for page in invoice_docs[doc_num]:
+                    writer.add_page(page)
+                for page in affidavit_docs[doc_num]:
+                    writer.add_page(page)
+                
+                # Extract customer info
+                affidavit_text = affidavit_docs[doc_num][0].extract_text()
+                customer_info = self.extract_customer_info(affidavit_text)
+
+                sanitized_customer_info = FileValidator.sanitize_filename(customer_info)
+                output_filename = os.path.join(output_dir, f"{doc_num} {sanitized_customer_info}.pdf")
+                
+                with open(output_filename, 'wb') as output_file:
+                    writer.write(output_file)
+                self.stats['processed_count'] += 1
+                logging.info(f"Processed document {doc_num}.")
+            except Exception as e:
+                logging.error(f"Error processing document {doc_num}: {e}")
+                continue
 
         logging.info(f"Processing complete! Output files are in the '{output_dir}' directory.")
         return self.stats, mismatch_details if (missing_invoices or missing_affidavits) else None

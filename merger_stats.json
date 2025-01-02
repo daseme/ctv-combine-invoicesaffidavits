@@ -4,5 +4,11 @@
         "error_count": 1,
         "total_time": 1.1065032482147217,
         "success_rate": 50.0
+    },
+    "2025-01-02": {
+        "processed_count": 9,
+        "error_count": 6,
+        "total_time": 131.58603739738464,
+        "success_rate": 33.33333333333333
     }
 }
