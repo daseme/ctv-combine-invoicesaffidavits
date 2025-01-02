@@ -26,7 +26,7 @@ A Python application that automatically merges invoice and affidavit PDF files, 
 
 1. Clone this repository or download the source code:
 ```bash
-git clone [repository-url]
+git clone [https://github.com/daseme/ctv-combine-invoicesaffidavits]
 cd invoice-merger
 ```
 
