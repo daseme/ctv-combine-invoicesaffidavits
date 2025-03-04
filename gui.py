@@ -9,6 +9,7 @@ import queue
 import time
 from typing import Dict
 from pdf_processor import PDFProcessor
+import logging
 
 class StatsTracker:
     def __init__(self, stats_file: str = "merger_stats.json"):
@@ -28,7 +29,8 @@ class StatsTracker:
                     "processed_count": 0,
                     "error_count": 0,
                     "total_time": 0,
-                    "success_rate": 100.0
+                    "success_rate": 100.0,
+                    "total_invoice_balance": 0.0  # Initialize total_invoice_balance
                 }
             }
             with open(self.stats_file, 'w') as f:
@@ -41,7 +43,8 @@ class StatsTracker:
                     "processed_count": 0,
                     "error_count": 0,
                     "total_time": 0,
-                    "success_rate": 100.0
+                    "success_rate": 100.0,
+                    "total_invoice_balance": 0.0  # Initialize total_invoice_balance
                 }
             }
     
@@ -58,7 +61,8 @@ class StatsTracker:
                 "processed_count": 0,
                 "error_count": 0,
                 "total_time": 0,
-                "success_rate": 100.0
+                "success_rate": 100.0,
+                "total_invoice_balance": 0.0  # Initialize total_invoice_balance
             }
             
         self.stats[self.today]["processed_count"] += 1
@@ -78,7 +82,8 @@ class StatsTracker:
             "processed_count": 0,
             "error_count": 0,
             "total_time": 0,
-            "success_rate": 100.0
+            "success_rate": 100.0,
+            "total_invoice_balance": 0.0  # Initialize total_invoice_balance
         })
 
 class ModernInvoiceMergerGUI:
@@ -129,8 +134,8 @@ class ModernInvoiceMergerGUI:
         header_frame.grid(row=0, column=0, sticky="ew", pady=(0, 20))
         
         ttk.Label(header_frame, 
-                 text="Invoice & Affidavit Merger",
-                 style="Header.TLabel").grid(row=0, column=0, pady=10)
+                text="Invoice & Affidavit Merger",
+                style="Header.TLabel").grid(row=0, column=0, pady=10)
         
         # Stats Section
         stats_frame = ttk.Frame(main_container, style="Stats.TFrame")
@@ -158,8 +163,8 @@ class ModernInvoiceMergerGUI:
         options_frame.grid(row=1, column=0, pady=10)
         
         ttk.Checkbutton(options_frame, 
-                       text="Allow document count mismatch",
-                       variable=self.ignore_mismatch_var).grid(row=0, column=0)
+                        text="Allow document count mismatch",
+                        variable=self.ignore_mismatch_var).grid(row=0, column=0)
         
         # Progress Section
         self.progress = ttk.Progressbar(content_frame, length=400, mode='determinate')
@@ -172,11 +177,15 @@ class ModernInvoiceMergerGUI:
         button_frame.grid(row=4, column=0, pady=20)
         
         self.process_button = ttk.Button(button_frame, text="Process Files", 
-                                       command=self.process_files)
+                                        command=self.process_files)
         self.process_button.grid(row=0, column=0, padx=5)
         
         ttk.Button(button_frame, text="Help",
-                  command=self.show_help).grid(row=0, column=1, padx=5)
+                command=self.show_help).grid(row=0, column=1, padx=5)
+        
+        # Add a label for the total invoice balance
+        self.total_balance_label = ttk.Label(content_frame, text="Total Invoice Balance: $0.00", style="StatsValue.TLabel")
+        self.total_balance_label.grid(row=5, column=0, pady=10)
     
     def create_stats_card(self, parent, column, title, stat_key, suffix=""):
         frame = ttk.Frame(parent, style="Stats.TFrame")
@@ -243,16 +252,18 @@ class ModernInvoiceMergerGUI:
             
             processing_time = time.time() - start_time
             self.stats_tracker.update_processing_stats(True, processing_time)
+            # Pass the total_invoice_balance to the stats_tracker
+            self.stats_tracker.stats[self.stats_tracker.today]['total_invoice_balance'] = stats.get('total_invoice_balance', 0.0)
             self.queue.put(("success", "\n".join(message_parts)))
-            
-        except ValueError as e:
-            processing_time = time.time() - start_time
-            self.stats_tracker.update_processing_stats(False, processing_time)
-            self.queue.put(("error", str(e)))
+            logging.info("Processing thread completed successfully.")
         except Exception as e:
             processing_time = time.time() - start_time
             self.stats_tracker.update_processing_stats(False, processing_time)
             self.queue.put(("error", str(e)))
+            logging.error(f"Error in processing thread: {e}")
+        finally:
+            # Ensure the queue is checked one last time
+            self.root.after(100, self.check_queue)
             
     def check_queue(self):
         try:
@@ -260,16 +271,24 @@ class ModernInvoiceMergerGUI:
             if msg_type == "success":
                 messagebox.showinfo("Success", message)
                 self.status_var.set("Ready for next batch...")
+                # Update the total invoice balance label
+                total_balance = self.stats_tracker.get_today_stats().get('total_invoice_balance', 0.0)
+                self.total_balance_label["text"] = f"Total Invoice Balance: ${total_balance:.2f}"
+                self.progress['value'] = 100
+                self.process_button.configure(state='normal')
             else:
                 messagebox.showerror("Error", message)
                 self.status_var.set("Error occurred. Please try again.")
-            
-            self.progress['value'] = 100
-            self.process_button.configure(state='normal')
+                self.progress['value'] = 100
+                self.process_button.configure(state='normal')
         except queue.Empty:
-            self.progress['value'] += 1
-            if self.progress['value'] < 90:
+            self.progress['value'] = min(self.progress['value'] + 1, 100)  # Cap progress at 100%
+            if self.progress['value'] < 100:
                 self.root.after(100, self.check_queue)
+            else:
+                # If progress reaches 100%, ensure the GUI is updated
+                self.status_var.set("Processing complete!")
+                self.process_button.configure(state='normal')
                     
     def show_help(self):
         help_text = """

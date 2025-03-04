@@ -6,9 +6,16 @@
         "success_rate": 50.0
     },
     "2025-01-02": {
-        "processed_count": 12,
-        "error_count": 6,
-        "total_time": 219.79019784927368,
-        "success_rate": 50.0
+        "processed_count": 23,
+        "error_count": 7,
+        "total_time": 401.69160556793213,
+        "success_rate": 69.56521739130434
+    },
+    "2025-02-04": {
+        "processed_count": 1,
+        "error_count": 0,
+        "total_time": 21.569072723388672,
+        "success_rate": 100.0,
+        "total_invoice_balance": 0.0
     }
 }

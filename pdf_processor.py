@@ -6,14 +6,6 @@ from tqdm import tqdm
 from typing import Dict, List, Tuple
 from utils.validator import FileValidator
 
-import os
-from PyPDF2 import PdfReader, PdfWriter
-import re
-import logging
-from tqdm import tqdm
-from typing import Dict, List, Tuple
-from utils.validator import FileValidator
-
 class PDFProcessor:
     def __init__(self, input_dir: str = None, ignore_mismatches: bool = False):
         self.input_dir = input_dir or 'input'
@@ -22,7 +14,8 @@ class PDFProcessor:
         self.stats = {
             'invoice_count': 0,
             'affidavit_count': 0,
-            'processed_count': 0
+            'processed_count': 0,
+            'total_invoice_balance': 0.0  # Initialize total_invoice_balance
         }
 
     def _find_input_files(self) -> Tuple[str, str]:
@@ -88,6 +81,33 @@ class PDFProcessor:
         """Extract customer information from PDF text."""
         match = re.search(r'AFFIDAVIT OF PERFORMANCE - CROSSINGS TV\n(.*?)\n', text)
         return match.group(1).strip() if match else "UNKNOWN"
+    
+    def extract_invoice_balance(self, text: str) -> float:
+        """
+        Extract the invoice balance or total from the invoice text.
+        Returns the value as a float. If not found, returns 0.0.
+        """
+        print("Extracted text from invoice:\n", text)  # Debugging: Print the extracted text
+
+        # Look for "Invoice Balance", "Total", or "Balance Due"
+        lines = text.splitlines()
+        for line in lines:
+            if "Invoice Balance" in line or "Total" in line or "Balance Due" in line:
+                print("Found line with balance/total:", line)  # Debugging: Print the line
+
+                # Extract the number after the keyword
+                # Example: "Invoice Balance $1,372.75" -> "1,372.75"
+                parts = line.split()
+                for part in parts:
+                    # Remove any non-numeric characters (e.g., "$", ",")
+                    cleaned = re.sub(r'[^0-9.]', '', part)
+                    if cleaned.replace('.', '').isdigit():  # Check if it's a valid number
+                        print("Extracted balance:", cleaned)  # Debugging: Print the extracted balance
+                        return float(cleaned)
+
+        # Fallback if no balance or total is found
+        print("No balance or total found in the text.")  # Debugging: Print if no balance is found
+        return 0.0
 
     def extract_info_from_pdf(self, pdf_path: str, debug_doc_num: str = None) -> Dict[str, List]:
         reader = PdfReader(pdf_path)
@@ -166,14 +186,6 @@ class PDFProcessor:
         logging.info("Merging documents...")
         for doc_num in tqdm(invoice_docs, desc="Creating merged PDFs", unit="doc"):
             try:
-                # Validate PDF structure
-                for page in invoice_docs[doc_num]:
-                    if not page.extract_text():
-                        logging.warning(f"Empty or invalid page in invoice {doc_num}")
-                for page in affidavit_docs[doc_num]:
-                    if not page.extract_text():
-                        logging.warning(f"Empty or invalid page in affidavit {doc_num}")
-                
                 writer = PdfWriter()
                 
                 # Add invoice and affidavit pages
@@ -182,13 +194,29 @@ class PDFProcessor:
                 for page in affidavit_docs[doc_num]:
                     writer.add_page(page)
                 
-                # Extract customer info from the INVOICE (not the affidavit)
-                invoice_text = invoice_docs[doc_num][0].extract_text()
-                customer_info = self.extract_customer_info_from_invoice(invoice_text)
-
-                sanitized_customer_info = FileValidator.sanitize_filename(customer_info)
-                output_filename = os.path.join(output_dir, f"{doc_num} {sanitized_customer_info}.pdf")
+                # Extract customer info
+                affidavit_text = affidavit_docs[doc_num][0].extract_text()
+                customer_info = self.extract_customer_info(affidavit_text)
                 
+                # Log the derived customer name
+                logging.info(f"Derived customer name for {doc_num}: {customer_info}")
+                
+                # Extract invoice balance
+                invoice_balance = self.extract_invoice_balance(invoice_docs[doc_num][0].extract_text())
+                self.stats['total_invoice_balance'] += invoice_balance  # Update total_invoice_balance
+                logging.info(f"Invoice balance for {doc_num}: {invoice_balance}")
+                
+                # Check if "WorldLink" is in the customer name
+                if "WorldLink" in customer_info:
+                    name_portion = "WorldLink"  # Use only "WorldLink" for the name portion
+                else:
+                    name_portion = customer_info  # Use the full customer name
+                
+                # Sanitize the name portion to create a valid file name
+                sanitized_name_portion = FileValidator.sanitize_filename(name_portion)
+                output_filename = os.path.join(output_dir, f"{doc_num} {sanitized_name_portion}.pdf")
+                
+                # Save the merged PDF
                 with open(output_filename, 'wb') as output_file:
                     writer.write(output_file)
                 self.stats['processed_count'] += 1
