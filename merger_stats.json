@@ -19,9 +19,9 @@
         "total_invoice_balance": 0.0
     },
     "2025-03-04": {
-        "processed_count": 4,
+        "processed_count": 6,
         "error_count": 0,
-        "total_time": 140.649516582489,
+        "total_time": 160.23888778686523,
         "success_rate": 100.0,
         "total_invoice_balance": 0.0
     }

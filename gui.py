@@ -21,29 +21,13 @@ class StatsTracker:
                     content = f.read().strip()
                     if content:
                         return json.loads(content)
-            default_stats = {
-                self.today: {
-                    "processed_count": 0,
-                    "error_count": 0,
-                    "total_time": 0,
-                    "success_rate": 100.0,
-                    "total_invoice_balance": 0.0
-                }
-            }
+            default_stats = {self.today: {"processed_count": 0, "error_count": 0, "total_time": 0, "success_rate": 100.0, "total_invoice_balance": 0.0}}
             with open(self.stats_file, 'w') as f:
                 json.dump(default_stats, f, indent=4)
             return default_stats
         except Exception as e:
             print(f"Error loading stats file: {e}")
-            return {
-                self.today: {
-                    "processed_count": 0,
-                    "error_count": 0,
-                    "total_time": 0,
-                    "success_rate": 100.0,
-                    "total_invoice_balance": 0.0
-                }
-            }
+            return {self.today: {"processed_count": 0, "error_count": 0, "total_time": 0, "success_rate": 100.0, "total_invoice_balance": 0.0}}
 
     def save_stats(self):
         try:
@@ -54,13 +38,7 @@ class StatsTracker:
 
     def update_processing_stats(self, success, processing_time):
         if self.today not in self.stats:
-            self.stats[self.today] = {
-                "processed_count": 0,
-                "error_count": 0,
-                "total_time": 0,
-                "success_rate": 100.0,
-                "total_invoice_balance": 0.0
-            }
+            self.stats[self.today] = {"processed_count": 0, "error_count": 0, "total_time": 0, "success_rate": 100.0, "total_invoice_balance": 0.0}
         self.stats[self.today]["processed_count"] += 1
         self.stats[self.today]["total_time"] += processing_time
         if not success:
@@ -71,13 +49,7 @@ class StatsTracker:
         self.save_stats()
 
     def get_today_stats(self):
-        return self.stats.get(self.today, {
-            "processed_count": 0,
-            "error_count": 0,
-            "total_time": 0,
-            "success_rate": 100.0,
-            "total_invoice_balance": 0.0
-        })
+        return self.stats.get(self.today, {"processed_count": 0, "error_count": 0, "total_time": 0, "success_rate": 100.0, "total_invoice_balance": 0.0})
 
 class ModernInvoiceMergerGUI:
     def __init__(self, root):
@@ -85,7 +57,8 @@ class ModernInvoiceMergerGUI:
         self.root.title("Invoice & Affidavit Merger")
         self.root.geometry("800x600")
         self.stats_tracker = StatsTracker()
-        self.folder_path = tk.StringVar()
+        self.folder_path = tk.StringVar()   # Input folder
+        self.output_folder = tk.StringVar()   # Output folder
         self.status_var = tk.StringVar(value="Ready to process files...")
         self.ignore_mismatch_var = tk.BooleanVar()
         self.process_button = None
@@ -120,10 +93,20 @@ class ModernInvoiceMergerGUI:
 
         content_frame = ttk.Frame(main_container)
         content_frame.pack(fill=BOTH, expand=YES)
-        folder_frame = ttk.Frame(content_frame)
-        folder_frame.pack(pady=20)
-        ttk.Entry(folder_frame, textvariable=self.folder_path, width=50).pack(side=LEFT, padx=5)
-        ttk.Button(folder_frame, text="Select Folder", command=self.select_folder).pack(side=LEFT)
+        
+        # Input folder selection
+        input_frame = ttk.Frame(content_frame)
+        input_frame.pack(pady=10, fill=X)
+        ttk.Label(input_frame, text="Input Folder:").pack(side=LEFT, padx=5)
+        ttk.Entry(input_frame, textvariable=self.folder_path, width=40).pack(side=LEFT, padx=5)
+        ttk.Button(input_frame, text="Select Folder", command=self.select_folder).pack(side=LEFT, padx=5)
+        
+        # Output folder selection
+        output_frame = ttk.Frame(content_frame)
+        output_frame.pack(pady=10, fill=X)
+        ttk.Label(output_frame, text="Output Folder:").pack(side=LEFT, padx=5)
+        ttk.Entry(output_frame, textvariable=self.output_folder, width=40).pack(side=LEFT, padx=5)
+        ttk.Button(output_frame, text="Select Folder", command=self.select_output_folder).pack(side=LEFT, padx=5)
 
         options_frame = ttk.Frame(content_frame)
         options_frame.pack(pady=10)
@@ -157,10 +140,10 @@ class ModernInvoiceMergerGUI:
 
     def show_help(self):
         help_text = (
-            "1. Click 'Select Folder' and choose your PDF folder.\n"
-            "2. PDFs must include 'invoice' and 'affidavit' in their names.\n"
-            "3. Click 'Process Files' to merge.\n"
-            "4. Output files are saved in a year-coded folder.\n"
+            "1. Click 'Select Folder' to choose your input folder containing PDFs.\n"
+            "2. Click 'Select Folder' for Output Folder to choose where merged files will be saved.\n"
+            "3. PDFs must include 'invoice' and 'affidavit' in their names.\n"
+            "4. Click 'Process Files' to merge.\n"
             "For mismatches, check 'Allow document count mismatch'."
         )
         messagebox.showinfo("Help", help_text)
@@ -187,10 +170,20 @@ class ModernInvoiceMergerGUI:
         if folder:
             self.folder_path.set(folder)
 
+    def select_output_folder(self):
+        folder = filedialog.askdirectory()
+        if folder:
+            self.output_folder.set(folder)
+
     def process_files(self):
         if not self.folder_path.get():
-            messagebox.showerror("Error", "Please select a folder first!")
+            messagebox.showerror("Error", "Please select an input folder first!")
             return
+        # If no output folder is set, use a default subfolder in the input folder.
+        if not self.output_folder.get():
+            default_out = os.path.join(self.folder_path.get(), "output")
+            os.makedirs(default_out, exist_ok=True)
+            self.output_folder.set(default_out)
         self.process_button.configure(state=DISABLED)
         self.status_var.set("Processing... Please wait...")
         self.progress['value'] = 0
@@ -201,7 +194,12 @@ class ModernInvoiceMergerGUI:
     def _process_thread(self):
         start_time = time.time()
         try:
-            processor = PDFProcessor(self.folder_path.get(), ignore_mismatches=self.ignore_mismatch_var.get())
+            # Pass output folder to PDFProcessor.
+            processor = PDFProcessor(
+                self.folder_path.get(),
+                output_dir=self.output_folder.get(),
+                ignore_mismatches=self.ignore_mismatch_var.get()
+            )
             stats, mismatch_details = processor.process_pdfs()
             message_parts = []
             if mismatch_details:
@@ -223,7 +221,6 @@ class ModernInvoiceMergerGUI:
             self.queue.put(("error", str(e)))
             logging.error(f"Error in processing thread: {e}")
         finally:
-            # Ensure the GUI checks the queue one last time
             self.root.after(100, self.check_queue)
 
     def check_queue(self):
@@ -242,7 +239,6 @@ class ModernInvoiceMergerGUI:
                 self.progress['value'] = 100
                 self.process_button.configure(state=NORMAL)
         except queue.Empty:
-            # Increment progress slowly for visual feedback
             current_value = self.progress['value']
             if current_value < 100:
                 self.progress['value'] = min(current_value + 1, 100)
